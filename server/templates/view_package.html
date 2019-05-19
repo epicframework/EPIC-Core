@@ -1,0 +1,115 @@
+{% include 'header.html' %}
+
+<div class="container">
+        <div class="row">
+                <div class="col-8">
+                        {% if package %}
+                                <!--{% for pack in package %}
+                                <table class="package-data-table table-striped table-hover">
+                                        <tr>
+                                                <th>{{ pack }}</th>
+                                                <td></td>
+                                        </tr><!-- #package header -->
+                                        <tr>
+                                                <th>Status: </th>
+                                                <td>{{ status }}</td>
+                                        </tr>
+                                        <tr>
+                                                <th class="section-head" valign="top">Meta: </th>
+                                                <td>
+                                                {% for info in package[pack]['meta'] %}
+                                                        {% for i in info %}
+                                                        <span class="property-name">{{ i }}:&nbsp;</span><span class="property-value">{{ info[i] }}</span><br>
+                                                        {% endfor %}
+                                                {% endfor %}
+                                                </td>
+                                        </tr><!-- #meta info -->
+                                        <tr>
+                                                <th class="section-head" valign="top">Commands: </th>
+                                                <td>
+                                                {% for cmd in package[pack]['commands'] %}
+                                                        {% for c in cmd %}
+                                                        <span class="property-name">{{ c }}:&nbsp;</span><span class="property-value">{{ cmd[c] }}</span><br>
+                                                        {% endfor %}
+                                                {% endfor %}
+                                                </td>
+                                        </tr><!-- #commands -->
+                                        <tr>
+                                                <th class="section-head" valign="top">Parameters: </th>
+                                                <td>
+                                                {% for param in package[pack]['params'] %}
+                                                        {% for p in param %}
+                                                                <span class="property-name">{{ p }}:&nbsp;</span><span class="property-value">{{ param[p] }}</span><br>
+                                                        {% endfor %}
+                                                {% endfor %}
+                                                </td>
+                                        </tr>
+                                        <tr>
+                                                <th class="section-head" valign="top">Options: </th>
+                                                <td>
+                                                {% for option in package[pack]['options'] %}
+                                                        {% for o in option %}
+                                                                <span class="property-name">{{ o }}:&nbsp;</span><span class="property-value">{{ option[o] }}</span><br>
+                                                        {% endfor %}
+                                                {% endfor %}
+                                                </td>
+                                        </tr>
+                                </table>
+                                {% endfor %}-->
+				{{ package }}
+                        {% else %}
+                                <h3>Package not found.</h3>
+                        {% endif %}
+                </div><!-- .col -->
+                <div class="col-4 package-menu-container">
+                        {% if package %}
+                        <h5>Package Menu</h5>
+                        <ul class="package-menu">
+                                {% for pack in package %}
+                                <a href="/packages/remove/{{ pack }}"><li>Remove Package</li></a>
+                                {% endfor %}
+                        </ul>
+                        {% endif %}
+                </div><!-- .col -->
+        </div><!-- .row -->
+</div><!-- .container -->
+
+<style>
+	.package-data-table {
+			margin-left: auto;
+			margin-right: auto;
+	}
+	.section-head {
+			width: 25%;
+	}
+	th, td {
+			padding: 5px;
+	}
+	.property-name {
+			font-weight: bold;
+	}
+
+	.package-menu-container h5 {
+			text-align: center;
+	}
+	.package-menu {
+			list-style-type: none;
+			padding-left: 0;
+	}
+	.package-menu li {
+			background-color: #a6a6a6;
+			padding: 5px;
+			margin: 10px;
+			text-align: center;
+	}
+	.package-menu a {
+			color: white;
+	}
+	.package-menu a:hover li {
+			background-color: #c9c9c9;
+	}
+	.package-menu a:hover {
+			color: white;
+			text-decoration: none;
+	}
+</style>

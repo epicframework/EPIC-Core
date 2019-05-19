@@ -1,0 +1,56 @@
+{% for package in packages %}
+	<div class="card">
+		<div class="card-header bg-success text-light">
+			{{ package['package_id'] }}
+		</div><!-- .card-header -->
+		<div class="container-fluid"><div class="row">
+			<div class="col-lg-3 px-0">
+				<div class="nav flex-column nav-pills tabs-packages" id="tabs-package-{{ package['package_id'] }}" role="tablist" aria-orientation="vertical">
+					<a class="nav-item nav-link rounded-0 active" id="p-info-tab-{{ package['package_id'] }}" data-toggle="tab" href="#p-info-{{ package['package_id'] }}" role="tab" aria-controls="p-info-{{ package['package_id'] }}" aria-selected="true">Meta</a>
+					<a class="nav-item nav-link rounded-0" id="p-cmd-tab-{{ package['package_id'] }}" data-toggle="tab" href="#p-cmd-{{ package['package_id'] }}" role="tab" aria-controls="p-cmd-{{ package['package_id'] }}" aria-selected="false">Commands</a>
+					<a class="nav-item nav-link rounded-0" id="p-app-tab-{{ package['package_id'] }}" data-toggle="tab" href="#p-app-{{ package['package_id'] }}" role="tab" aria-controls="p-app-{{ package['package_id'] }}" aria-selected="false">Applications</a>
+					<a class="nav-item nav-link rounded-0" id="p-binding-tab-{{ package['package_id'] }}" data-toggle="tab" href="#p-binding-{{ package['package_id'] }}" role="tab" aria-controls="p-binding-{{ package['package_id'] }}" aria-selected="false">Bindings</a>
+					<a class="nav-item nav-link rounded-0" id="p-delete-tab-{{ package['package_id'] }}" data-toggle="tab" href="#p-delete-{{ package['package_id'] }}" role="tab" aria-controls="p-binding-{{ package['package_id'] }} aria-selected="false">Remove</a>
+				</div>
+			</div>
+			<div class="col-lg-9">
+				<div class="tab-content" id="tabContent-package-{{package['package_id'] }}">
+					<div class="tab-pane card-body fade show active" id="p-info-{{ package['package_id'] }}" role="tabpanel" aria-labelledby="p-info-tab-{{ package['package_id'] }}">
+						<ul>
+							<li>Creator: {{ package['meta']['creator'] }}</li>
+							<li>Last Modified: {{ package['meta']['last modified'] }}</li>
+							<li>Description: {{ package['meta']['description'] }}</li>
+						</ul>
+					</div>
+					<div class="tab-pane card-body fade" id="p-cmd-{{ package['package_id'] }}" role="tabpanel" aria-labelledby="p-cmd-tab-{{ package['package_id'] }}">
+						<ul>
+						{% for command in package['commands'] %}
+							<li>{{ command }} : <pre>{{ package['commands'][command] }}</pre></li>
+						{% endfor %}
+						</ul>
+					</div>
+					<div class="tab-pane card-body fade" id="p-app-{{ package['package_id'] }}" role="tabpanel" aria-labelledby="p-app-tab-{{ package['package_id'] }}">
+						<ul>
+						{% for application in package['applications'] %}
+							<li>{{ application }}</li>
+						{% endfor %}
+						</ul>
+					</div>
+					<div class="tab-pane card-body fade" id="p-binding-{{ package['package_id'] }}" role="tabpanel" aria-labelledby="p-binding-tab-{{ package['package_id'] }}">
+						<ul>
+						{% for binding in package['bindings'] %}
+							<li>{{ binding }}</li>
+						{% endfor %}
+						</ul>
+					</div>
+					<div class="tab-pane card-body text-center fade" id="p-delete-{{ package['package_id'] }}" role="tabpanel" aria-labelledby="p-delete-tab-{{ package['package_id'] }}">
+						<h5>This will remove the package permanently</h5>
+						<p>Are you sure you wish to continue?</p>
+						<!--<a class="btn btn-danger text-light" href="/packages/remove/{{ package['package_id'] }}">Continue</a>-->
+						<a class="btn btn-disabled text-light"role="button" aria-disabled="true">Remove (Disabled for Demo)</a>
+					</div>
+				</div>
+			</div>
+		</div></div><!-- .card-body -->
+	</div><!-- .card -->
+{% endfor %}

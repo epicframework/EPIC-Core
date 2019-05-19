@@ -1,0 +1,21 @@
+{
+        "name": "description", // Provided by user
+        "description":"description", // Provided by user
+        "properties": {
+                "property_name": { // Provided by user
+                        "title": "Temperature", // Based on sensor type
+                        "type": "number", // Based on sensor type
+                        "unit": "degree Celsius", // Based on sensor type
+                        "readOnly": true, // Based on sensor type
+                        "description": "description" // Provided by user
+                },
+                "actions": {
+                        "reboot": {
+                                "title": "Reboot",
+                                "description": "Reboot the device"
+                        }
+                }
+        }
+}
+
+

@@ -1,0 +1,21 @@
+{% include 'header.html' %}
+
+<div class="wrapper">
+
+	{% include 'sidebar-empty.html' %}
+
+	<div class="content dashboard" style="width: 100%">
+		{% include 'navbar.html' %}
+
+		<div class="container-fluid">
+			<div class="masonry">
+				<!-- Create Device Cards -->
+				{% include 'device_cards.html' %}
+			</div><!-- .masonry -->
+		</div><!-- .container-fluid -->
+
+	</div><!-- .dashboard -->
+
+</div>
+	
+{% include 'footer.html' %}

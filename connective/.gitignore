@@ -1,0 +1,4 @@
+# Compiled binaries
+phsh/phsh
+connective/sharedlib/*.so
+connective/python/*.so

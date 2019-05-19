@@ -1,0 +1,18 @@
+{% include 'header.html' %}
+
+<div class="wrapper">
+
+	{% include 'sidebar-empty.html' %}
+
+	<div class="content dashboard" style="width:100%">
+		{% include 'navbar.html' %}
+
+		<div class="mt-5 mx-auto alert alert-success w-50">
+			Package '{{ removal }}' successfully removed.
+		</div>
+
+	</div>
+
+</div>
+
+{% include 'footer.html' %}

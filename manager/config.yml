@@ -1,0 +1,25 @@
+config:
+  port: ":3111"
+  address: "http://127.0.0.1:3111"
+  heartbeat_threshold: 240
+components:
+  - cmd: ['exec', ['python', 'test.py', '<id>', '<remote>']]
+    id:  "testpy@0.1"
+    name: "Python Test Program"
+    recovery: "standard"
+  - cmd: ['exec', ['python', '../server/run.py', '<id>', '<remote']]
+    id: "server@0.1"
+    name: "HA/Server"
+  - cmd: ['exec' ['python', '../devicemanager/BroadcastClient.py', '<id>', '<remote>']]
+    id: "devicemanager@0.1"
+    name: "HA/DeviceManager"
+connective:
+  - cmd: [['runs', [': heartbeats (@ directory)']]]
+    name: "Managment Data Structure"
+    msg: "Initializing Management Data Structures"
+  - cmd: [["runs", ": events (@directory"],["runs", "events : new-package (@ requests)"]]
+    name: "Event Queue Directory"
+    msg: "Initializing Event Queue Directory"
+  - cmd: [["runs", ": devices (@ directory)"],["runs", "include device ($ devices)"]]
+    name: "IoT Data Structures"
+    msg: "Initializing IoT Data Structures"

@@ -1,0 +1,63 @@
+<nav id="sidebar" class="bg-primary">
+	<div class="sidebar-header bg-secondary">
+		<h3>EPIC</h3>
+	</div>
+		
+	<ul class="list-unstyled component">
+		<li>
+							<a href="/">
+									<i class="fas fa-home"></i>
+									Home
+							</a>
+					</li>
+		<li>
+			<a href="#packageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+				<i class="fas fa-box"></i>
+				Packages
+			</a>
+			<ul class="collapse list-unstyled" id="packageSubmenu">
+				<li>
+					<a href="/packages">View Packages</a>
+				</li>
+				<li>
+					<a href="/packages/add">Add Package</a>
+				</li>
+				<hr>
+				<p>Packages</p>
+				{% for package in packages %}
+				<li>
+					{% for name in package %}
+					<a href="/packages/{{ name }}">{{ name }}</a>
+					{%endfor%}
+				</li>
+				{% endfor %}
+				<hr>
+			</ul>
+		</li>
+		<li>
+			<a href="#deviceSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+				<i class="fas fa-laptop"></i>
+				Devices
+			</a>
+			<ul class="collapse list-unstyled" id="deviceSubmenu">
+				<li>
+					<a href="/devices">View Devices</a>
+				</li>
+			</ul>
+		</li>
+		<!--<li>
+			<a href="#macroSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+				<i class="fas fa-tasks"></i>
+				Macros
+			</a>
+			<ul class="collapse list-unstyled" id="macroSubmenu">
+				<li>
+					<a href="/macros">View Macros</a>
+				</li>
+				<li>
+					<a href="/macros/add">Add Macro</a>
+				</li>
+			</ul>
+		</li>-->
+	</ul>
+</nav>

@@ -1,0 +1,177 @@
+{% include 'header.html' %}
+
+<div class="container">
+        <div class="row">
+                <div class="col-8">
+                        {% if device %}
+                                <table class="package-data-table table-striped table-hover">
+                                        <tr>
+                                                <th>{{ device["moz_definition"]["name"] }}</th>
+                                                <td>{{ device["manager_id"] }}</td>
+                                        </tr><!-- #package header -->
+                                        <tr>
+                                                <th>Description: </th>
+                                                <td>{{ device["moz_definition"]["description"] }}</td>
+                                        </tr>
+                                        <tr>
+                                                <th class="section-head" valign="top">Properties</th>
+                                                <td>
+                                                {% for property in device["moz_definition"]["properties"] %}
+                                                        <span class="property-name">{{ property }}:</span><br>
+							<span class="property-value">Description: {{ device["moz_definition"]["properties"][property]["description"] }}</span><br>
+                                                        <span class="property-value">Type: {{ device["moz_definition"]["properties"][property]["type"] }}</span><br>
+                                                        <span class="property-value">Unit: {{ device["moz_definition"]["properties"][property]["unit"] }}</span><br>
+                                                        <span class="property-value">Read Only? {{ device["moz_definition"]["properties"][property]["readOnly"] }}</span><br>
+							{% if not device["moz_definition"]["properties"][property]["readOnly"] %}
+							<form>
+								<label for="write-{{ property }}">Write:</label>
+								<input id="write-{{ property }}" name="write-{{ property }}" class="write-value" />
+								<button type="button" class="submit-write" data-input="write-{{ property }}" data-property="{{ property }}" data-target="{{ device["manager_id"] }}">Submit</button>
+							</form>
+							{% endif %}
+							<button type="button" class="submit-read" id="read-{{property}}" data-target="{{ device["manager_id"] }}" data-property="{{ property }}">Read</button><span id="span-{{property}}"></span><br>
+                                                {% endfor %}
+                                                </td>
+                                        </tr><!-- #meta info -->
+                                        <tr>
+                                                <th class="section-head" valign="top">Actions</th>
+                                                <td>
+                                                {% for action in device["moz_definition"]["actions"] %}
+                                                        <span class="property-name">{{ action }}:&nbsp;</span>
+							<span class="property-value">{{ device["moz_definition"]["actions"][action]["description"] }}</span><br>
+							<button type="button" id="trigger-{{action}}" class="action-trigger" data-target="{{ device["manager_id"] }}" data-action="{{ action }}">Trigger</button><br>
+                                                {% endfor %}
+                                                </td>
+                                        </tr><!-- #commands -->
+                                        <tr>
+                                                <th class="section-head" valign="top">Events</th>
+                                                <td>
+                                                {% for event in device["moz_definition"]["events"] %}
+                                                                <span class="property-name">{{ event }}:&nbsp;</span>
+								<span class="property-value">{{ device["moz_definition"]["events"][event]["description"] }}</span><br>
+								<span class="property-value">Last occured: Never</span><br>
+                                                {% endfor %}
+                                                </td>
+                                        </tr>
+                                </table>
+                        {% else %}
+                                <h3>Device not found.</h3>
+                        {% endif %}
+                </div><!-- .col -->
+                <div class="col-4 package-menu-container">
+                        {% if package %}
+                        <h5>Package Menu</h5>
+                        <ul class="package-menu">
+                                {% for pack in package %}
+                                <a href="/packages/remove/{{ pack }}"><li>Remove Package</li></a>
+                                {% endfor %}
+                        </ul>
+                        {% endif %}
+                </div><!-- .col -->
+        </div><!-- .row -->
+</div><!-- .container -->
+
+<script>
+
+$(document).ready(function() {
+
+	$(".action-trigger").click(function() {
+
+		var target = $(this).data("target");
+		var action = $(this).data("action");
+
+		data = {"target": target, "action": action}
+
+		$.ajax({
+			method: "POST",
+			url: "/devices/action/trigger",
+			data: data,
+			success: function(data) {
+				alert("Triggered "+action+" for "+target+": "+data);
+			}
+		})
+
+	});
+
+	$(".submit-read").click(function() {
+
+		var target = $(this).data('target');
+		var property = $(this).data('property');
+
+		data = {"target": target, "property": property}
+
+		$.ajax({
+			method: "POST",
+			url: "/devices/property/read",
+			data: {
+				"target": target,
+				"property": property,
+			},
+			success: function(data) {
+				alert("Read "+property+" of "+target+": "+data)
+			}
+		})
+
+	})
+
+	$(".submit-write").click(function() {
+
+		var target = $(this).data('target');
+		var property = $(this).data('property');
+		var value = $('input[name="'+$(this).data('input')+'"]').val();
+
+		data = {"target": target, "property": property, "value": value}
+
+		$.ajax({
+			method: "POST",
+			url: "/devices/property/write",
+			success: function(data) {
+				alert("Wrote "+property+" of "+target+" to "+value+": "+data)
+			}
+		})
+
+	})
+
+});
+
+</script>
+
+<style>
+	.package-data-table {
+			margin-left: auto;
+			margin-right: auto;
+	}
+	.section-head {
+			width: 25%;
+	}
+	th, td {
+			padding: 5px;
+	}
+	.property-name {
+			font-weight: bold;
+	}
+
+	.package-menu-container h5 {
+			text-align: center;
+	}
+	.package-menu {
+			list-style-type: none;
+			padding-left: 0;
+	}
+	.package-menu li {
+			background-color: #a6a6a6;
+			padding: 5px;
+			margin: 10px;
+			text-align: center;
+	}
+	.package-menu a {
+			color: white;
+	}
+	.package-menu a:hover li {
+			background-color: #c9c9c9;
+	}
+	.package-menu a:hover {
+			color: white;
+			text-decoration: none;
+	}
+</style>

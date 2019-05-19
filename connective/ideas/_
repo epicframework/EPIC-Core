@@ -1,0 +1,25 @@
+--h
+: s (newserver)
+s : /sa-clusters make dir (map must-interface "phoenix/sa-cluster")
+    Actually a shorthand:
+        s : sa-clusters mkdir must-interface "phoenix/sa-cluster"
+listen ($ port)
+
+--c
+: r (connect ($ hub) ($ key))
+
+
+foreach sensor
+    : sensor (get _)
+    : a mkapi
+    : hGetData mkhandler // reports an ID to caller
+    : hSimFail mkhandler // reports an ID to caller
+    a register get-data hGetData
+    a register sim-fail hSimFail
+
+    // maybe some kind of basic permissions setup
+    a set-mask get-data (any)
+    a set-mask sim-fail (manager cli)
+
+    // [r expose a] no wait, not quite
+    r /sa-clusters add a

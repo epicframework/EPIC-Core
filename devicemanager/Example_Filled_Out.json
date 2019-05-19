@@ -1,0 +1,21 @@
+{
+        "name": "living room sensor device", // Provided by user
+        "description":"Sensor device for reading living room temperature", // Provided by user
+        "properties": {
+                "living_room_temp": { // Provided by user
+                        "title": "Temperature", // Based on sensor type
+                        "type": "number", // Based on sensor type
+                        "unit": "degree Celsius", // Based on sensor type
+                        "readOnly": true, // Based on sensor type
+                        "description": "Temperature of living room in degree C" // Provided by user
+                },
+                "actions": {
+                        "reboot": {
+                                "title": "Reboot",
+                                "description": "Reboot the device"
+                        }
+                }
+        }
+}
+
+
