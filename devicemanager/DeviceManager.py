@@ -1,8 +1,11 @@
-import socket, json, sys
+import socket, json, sys, datetime, logging
 from threading import Thread
 
 # Import HA/Connective bindings
 from bindings import new_ll, connect, new_interpreter
+
+# Setup Logging
+logging.basicConfig(filename='devicemanager.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
 
 #Listen for broadcasts when found return name of device found
 #Maintain map of address for devices (name tp ip associated) - dict that
@@ -17,15 +20,25 @@ def listenForBroadcast(broadcastClient):
         global deviceAddressDict
         data, addr = broadcastClient.recvfrom(1024)
         jsonData = json.loads(str(data, "utf-8"))
-        print(str(data))
-        print(json.dumps(jsonData))
-        print(jsonData)
         for key in jsonData:
                 ip = jsonData[key]
                 if jsonData[key] not in deviceAddressDict:
                         deviceAddressDict[ip] = key
                         print("SAVED", deviceAddressDict)
                         return key, ip, jsonData
+
+def createReceipt(source, event, command, result):
+        timestamp = datetime.datetime.now()
+        receipt = json.dumps({
+                "Source": source,
+                "Event": event,
+                "Command": command,
+                "Time Stamp": timestamp,
+                "Result": result
+        })
+        logging.info(receipt)
+        sys.stdout.write(receipt+"\n")
+        sys.stdout.flush()
 
 class SendCommandThread(Thread):
 
@@ -45,23 +58,21 @@ class SendCommandThread(Thread):
                 while True:
                         try:
                                 client.send(str.encode(command))
-                                #print("Sending command %s to device %s" % (command, device))
                                 response = client.recv(1024)
                                 stringResponse = str(response, "utf-8")
-                                #print(stringResponse)
                                 jsonResponse = None
                                 try:
                                     jsonResponse = json.loads(stringResponse)
                                 except Exception as exc:
-                                    print("blank reading O.o")
+                                    logging.error("blank reading O.o")
+                                    logging.error(exc)
                                 if True:
                                     self.listener.update_device_single_value(self.device,
                                         jsonResponse["output"])
-                                    print("**********")
-                                    print("\r\n %s: %s" % (jsonResponse["src"], jsonResponse["output"]))
-                                    print("**********")
+                                    logging.info("\r\n %s: %s" % (jsonResponse["src"], jsonResponse["output"]))
                         except Exception as exc:
-                                print("\r\n %s disconnected" % self.device)
+                                logging.error("\r\n %s disconnected" % self.device)
+                                logging.error(exc)
                                 self.disconnectFromDevice()
                                 exit()
 
@@ -74,7 +85,6 @@ class SendCommandThread(Thread):
                 try:
                         client.connect((HOST, PORT))
                         bytesSent = client.send(str.encode(json.dumps({"src": "hub", "code": "10", "msg": "request specification"})))
-                        #print("Message sent. Size: "+str(bytesSent))
                         mozdef = json.loads(str(client.recv(1024), 'utf-8'))
                         # Figure out what do
                         whatDo = self.dataType
@@ -89,9 +99,9 @@ class SendCommandThread(Thread):
                                 self.listener.add_device(self.device, mozdef, "occupancy")
                 except Exception as exc:
                         client.close()
-                        print(exc)
+                        logging.error(exc)
                         exit()
-                print("Connected:", connectedDeviceThreads)
+                logging.info("Connected: %s" % (connectedDeviceThreads))
                 return client
 
         def disconnectFromDevice(self):
@@ -151,8 +161,8 @@ def launch_client(deviceEventListener):
                 elif deviceName == "Occupancy Sensor":
                         command = "read occ"
                 else:
-                        print(deviceName)
-                        print("Not a compatible device for this framework")
+                        logging.info(deviceName)
+                        logging.info("Not a compatible device for this framework")
                         exit()
                 dataType = command
                 command = json.dumps({"src": "Hub", "code": "20", "msg": command})
