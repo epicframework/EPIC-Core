@@ -26,3 +26,7 @@ The Extensible Package Integration Controller is an IoT framework which utilizes
 - Allows for the creation of queues and directories
 - Creates transaction receipts to be validated by Manager
 - Facilitates heartbeat generation and monitoring
+
+## Packages
+
+Packages are utilized to expand the functionality of the core framework. Through Connective, packages are capable of utilizing all information exposed and generated through the core applications as well as generating their own data and exposing different classes of devices. Examples of packages are specialized drivers for handling Bluetooth and ZigBee devices and conforming their behaviour to the Mozilla Web of Things-based implementation used for WiFi devices, addtional user interfaces or utilities, or the implementation of data management tools.
